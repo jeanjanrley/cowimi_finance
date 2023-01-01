@@ -1,0 +1,58 @@
+:root {
+	font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+	font-size: 16px;
+	line-height: 24px;
+	font-weight: 400;
+
+	color-scheme: light dark;
+	color: rgba(255, 255, 255, 0.87);
+	background-color: #242424;
+
+	font-synthesis: none;
+	text-rendering: optimizeLegibility;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	-webkit-text-size-adjust: 100%;
+}
+
+* {
+	box-sizing: border-box;
+	padding: 0;
+	margin: 0;
+}
+
+html {
+	height: 100%;
+}
+
+body {
+	height: 100%;
+}
+
+#root {
+	height: 100%;
+}
+
+input,
+button {
+	height: 40px;
+	border-radius: 4px;
+	border: 1px solid #777;
+	box-shadow: none;
+}
+
+button {
+	cursor: pointer;
+	transition: all 0.2s ease-in-out;
+	outline: 2px solid #3AC97700;
+
+	&:hover {
+		outline: 2px solid #3AC977;
+	}
+}
+
+.page {
+	height: 100%;
+	//background: red;
+	padding: 16px;
+}

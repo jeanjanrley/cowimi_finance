@@ -1,0 +1,124 @@
+.home-page {
+	.container-area {
+		display: flex;
+		flex-direction: column;
+		margin: 0 auto;
+		width: 100%;
+		max-width: 460px;
+		padding: 12px 0;
+		height: 100%;
+		gap: 12px;
+
+		.header-area {
+			display: flex;
+			gap: 8px;
+			height: 84px;
+
+			.header-box {
+				display: flex;
+				flex-direction: column;
+				flex: 1;
+				border-radius: 8px;
+				align-items: center;
+				justify-content: center;
+				gap: 4px;
+				background: #32AA63;
+			}
+
+			.second-box {
+				background: #d2531c;
+			}
+		}
+
+		.periodo-area {
+			display: flex;
+			flex-direction: column;
+			width: 100%;
+			gap: 8px;
+
+			.dates-area {
+				display: flex;
+				width: 100%;
+				gap: 8px;
+				justify-content: space-between;
+
+
+				.periodo-box {
+					display: flex;
+					flex-direction: column;
+					gap: 4px;
+					width: 100%;
+
+					>input {
+						width: 100%;
+						padding: 4px;
+					}
+				}
+
+			}
+
+			.find-button {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				width: 100%;
+				cursor: pointer;
+				gap: 12px;
+				height: 35px;
+				border: none;
+				background: #3AC977;
+				font-size: 16px;
+			}
+
+		}
+
+		.items-area {
+			display: flex;
+			flex: 1;
+			height: 100%;
+			flex-direction: column;
+			gap: 8px;
+			border-radius: 8px;
+			padding: 8px;
+			background-color: #303030;
+			overflow-y: auto;
+		}
+
+		.buttons-area {
+			display: flex;
+			width: 100%;
+			gap: 8px;
+
+			>button {
+				background: #8C4CAA;
+				font-size: 18px;
+
+				&:hover {
+					outline: 1px solid #fff;
+				}
+			}
+
+			.main-button {
+				flex-grow: 1;
+			}
+
+			.litte-button {
+				width: 40px;
+				display: flex;
+				flex-direction: row;
+				align-items: center;
+				justify-content: center;
+			}
+
+			.logOff-button {
+				background: #303030;
+			}
+
+			.export-button {
+				background: #DA0F12;
+			}
+
+
+		}
+	}
+}

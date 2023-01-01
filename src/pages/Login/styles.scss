@@ -1,0 +1,44 @@
+.container {
+	margin: 0 auto;
+	width: 100%;
+	max-width: 480px;
+	height: 100%;
+	display: flex;
+}
+
+.container-form {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	gap: 32px;
+
+	.header-area {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 12px;
+
+		h2 {
+			font-size: 44px;
+		}
+
+		p {
+			font-size: 24px;
+		}
+	}
+
+	.forgot-password {
+		color: #777;
+		cursor: pointer;
+		margin-bottom: 32px;
+	}
+}
+
+.login-form {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
