@@ -1,4 +1,3 @@
-import { Timestamp } from "firebase/firestore";
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { TodoItem } from "../../components/TodoITem";
@@ -16,7 +15,6 @@ const date = new Date();
 const primeiroDia = new Date(date.getFullYear(), date.getMonth(), 1).toISOString().split("T")[0];
 const ultimoDia = new Date(date.getFullYear(), date.getMonth() + 1, 0).toISOString().split("T")[0];
 
-
 export function HomePage() {
 	const { items, setItems } = useContext(MainContext);
 	const { getItems, fazerLogOff } = useQueries();
@@ -29,9 +27,7 @@ export function HomePage() {
 	const handleGetItems = useCallback(async () => {
 		try {
 			if (inicio && fim) {
-				const inicio = new Date(`${primeiroDia}T00:00:00`);
-				const fim = new Date(`${ultimoDia}T23:59:59`);
-				getItems({ inicio, fim })
+				getItems({ inicio: new Date(inicio), fim: new Date(fim) })
 					.then(response => {
 						setItems(response ?? null);
 					})
@@ -45,10 +41,8 @@ export function HomePage() {
 	}, [fim, getItems, inicio, setItems]);
 
 	useEffect(() => {
-		if (inicio && fim) {
-			handleGetItems();
-		}
-	}, [fim, handleGetItems, inicio]);
+		handleGetItems();
+	}, [handleGetItems]);
 
 	const handleCalcItems = () => {
 		const result = items?.reduce((prev, curr) => {
@@ -140,7 +134,7 @@ export function HomePage() {
 							<input
 								type="date"
 								defaultValue={primeiroDia}
-								onChange={event => setFim(event.target.value)}
+								onChange={event => setInicio(event.target.value)}
 							/>
 						</div>
 						<div className="periodo-box">
@@ -148,7 +142,7 @@ export function HomePage() {
 							<input
 								type="date"
 								defaultValue={ultimoDia}
-								onChange={event => setInicio(event.target.value)}
+								onChange={event => setFim(event.target.value)}
 							/>
 						</div>
 					</div>

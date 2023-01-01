@@ -121,8 +121,11 @@ export function useQueries() {
 	const getItems = useCallback(async ({ inicio: inicioRef, fim: fimRef }: { inicio: Date; fim: Date }) => {
 		try {
 			const ref = collection(db, "items");
-			const inicio = Timestamp.fromDate(new Date(`${inicioRef}T00:00:00`));
-			const fim = Timestamp.fromDate(new Date(`${fimRef}T23:59:59`));
+			const inicio = Timestamp.fromDate(new Date(`${inicioRef.toISOString().split("T")[0]}T00:00`));
+			const fim = Timestamp.fromDate(new Date(`${fimRef.toISOString().split("T")[0]}T20:59:59`));
+
+			console.log("Inicio: ", inicio.toDate().toISOString());
+			console.log("Fim: ", fim.toDate().toISOString());
 
 			const queryRef = query(ref,
 				where("vencimento", ">=", inicio),
