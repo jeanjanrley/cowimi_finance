@@ -44,8 +44,7 @@ export function useQueries() {
 
 			await auth.setPersistence(browserLocalPersistence)
 				.then(async () => {
-					const { user } = await signInWithEmailAndPassword(auth, email, password);
-					return user;
+					return signInWithEmailAndPassword(auth, email, password);
 				})
 				.catch((error) => {
 					console.log(error);
