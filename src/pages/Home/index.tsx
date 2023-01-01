@@ -1,5 +1,5 @@
 import { Timestamp } from "firebase/firestore";
-import { useCallback, useContext, useEffect, useRef } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { TodoItem } from "../../components/TodoITem";
 import { MainContext } from "../../contexts";
@@ -21,16 +21,13 @@ export function HomePage() {
 	const { items, setItems } = useContext(MainContext);
 	const { getItems, fazerLogOff } = useQueries();
 	const navigate = useNavigate();
-	const inicioRef = useRef(primeiroDia);
-	const fimRef = useRef(ultimoDia);
+	const [inicio, setInicio] = useState(primeiroDia);
+	const [fim, setFim] = useState(ultimoDia);
 	const totalEntradas = useRef(0);
 	const totalSaidas = useRef(0);
 
 	const handleGetItems = useCallback(async () => {
 		try {
-			const inicio = inicioRef.current;
-			const fim = fimRef.current;
-
 			if (inicio && fim) {
 				const inicio = new Date(`${primeiroDia}T00:00:00`);
 				const fim = new Date(`${ultimoDia}T23:59:59`);
@@ -45,11 +42,13 @@ export function HomePage() {
 		} catch (error) {
 			console.log(error);
 		}
-	}, [getItems, setItems]);
+	}, [fim, getItems, inicio, setItems]);
 
 	useEffect(() => {
-		handleGetItems();
-	}, [handleGetItems]);
+		if (inicio && fim) {
+			handleGetItems();
+		}
+	}, [fim, handleGetItems, inicio]);
 
 	const handleCalcItems = () => {
 		const result = items?.reduce((prev, curr) => {
@@ -99,14 +98,14 @@ export function HomePage() {
 
 	const PDFBUTTON = (() => {
 		try {
-			if (items && inicioRef.current && fimRef.current) {
+			if (items && inicio && fim) {
 				return (
 					<PDFDownloadLink
 						fileName="Realatório"
 						document={<PDFPage
 							items={items}
-							inicio={new Date(`${inicioRef.current}T00:00:00`)}
-							fim={new Date(`${fimRef.current}T23:59:59`)}
+							inicio={new Date(`${inicio}T00:00:00`)}
+							fim={new Date(`${fim}T23:59:59`)}
 						/>}
 					>
 						<button className="export-button litte-button">
@@ -141,7 +140,7 @@ export function HomePage() {
 							<input
 								type="date"
 								defaultValue={primeiroDia}
-								onChange={event => inicioRef.current = event.target.value}
+								onChange={event => setFim(event.target.value)}
 							/>
 						</div>
 						<div className="periodo-box">
@@ -149,7 +148,7 @@ export function HomePage() {
 							<input
 								type="date"
 								defaultValue={ultimoDia}
-								onChange={event => fimRef.current = event.target.value}
+								onChange={event => setInicio(event.target.value)}
 							/>
 						</div>
 					</div>
