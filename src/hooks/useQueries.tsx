@@ -47,7 +47,11 @@ export function useQueries() {
 					const { user } = await signInWithEmailAndPassword(auth, email, password);
 					return user;
 				})
-				.catch((error) => console.log(error));
+				.catch((error) => {
+					console.log(error);
+					throw error;
+				}
+				);
 		} catch (error) {
 			console.log(error);
 			const { code } = error as any;

@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { TodoItem } from "../../components/TodoITem";
 import { MainContext } from "../../contexts";
@@ -24,25 +24,29 @@ export function HomePage() {
 	const totalEntradas = useRef(0);
 	const totalSaidas = useRef(0);
 
-	const handleGetItems = useCallback(async () => {
-		try {
-			if (inicio && fim) {
-				getItems({ inicio: new Date(inicio), fim: new Date(fim) })
-					.then(response => {
-						setItems(response ?? null);
-					})
-					.catch(error => {
-						console.log(error);
-					});
-			}
-		} catch (error) {
-			console.log(error);
-		}
-	}, [fim, getItems, inicio, setItems]);
-
 	useEffect(() => {
-		handleGetItems();
-	}, [handleGetItems]);
+		getItems({ inicio: new Date(primeiroDia), fim: new Date(ultimoDia) })
+			.then(response => {
+				setItems(response ?? null);
+			})
+			.catch(error => {
+				console.log(error);
+				setItems(null);
+			});
+	}, [getItems, setItems]);
+
+	const handleGetItems = async () => {
+		if (inicio && fim) {
+			getItems({ inicio: new Date(inicio), fim: new Date(fim) })
+				.then(response => {
+					setItems(response ?? null);
+				})
+				.catch(error => {
+					console.log(error);
+					setItems(null);
+				});
+		}
+	};
 
 	const handleCalcItems = () => {
 		const result = items?.reduce((prev, curr) => {
