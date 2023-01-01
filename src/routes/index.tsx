@@ -20,11 +20,13 @@ export function MainRoutes() {
 		};
 	}, [setUser]);
 
+
+
 	return (
 		<BrowserRouter>
 			<Routes>
 				{
-					user ?
+					auth.currentUser ?
 						<>
 							<Route path="/" element={<HomePage />} />
 							<Route path="addItem" element={<AddItemPage />} />
