@@ -119,6 +119,11 @@ export const PDFPage = ({ items, fim, inicio }: PDFPageProps) => {
 		}
 	})();
 
+	const replaceDate = (date: Date) => {
+		const stringDate = date.toLocaleDateString("pt-BR");
+		return stringDate;
+	};
+
 	return (
 		<Document>
 			<Page size="A4" style={styles.page}>
@@ -134,7 +139,7 @@ export const PDFPage = ({ items, fim, inicio }: PDFPageProps) => {
 				</View>
 				<View style={styles.subHeader}>
 					<Text style={styles.textItem}>Resultados: {items?.length.toLocaleString("pt-BR", { minimumIntegerDigits: 2 })}</Text>
-					<Text style={styles.textItem}>Período: {inicio.toLocaleDateString("pt-BR")} - {fim.toLocaleDateString("pt-BR")}</Text>
+					<Text style={styles.textItem}>Período: {replaceDate(inicio)} - {replaceDate(fim)}</Text>
 				</View>
 				<View style={styles.contentArea}>
 					{items?.map(item => <ItemComponent key={item.id} item={item} />)}

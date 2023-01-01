@@ -55,7 +55,7 @@ export function TodoItem({ item }: TodoItemComponentProps) {
 						<AiOutlineDelete color="#fff" size={24} cursor="pointer" onClick={handleDeleteItem} />
 					</div>
 				</div>
-				<p>{item.description}</p>
+				<p>{item.vencimento.toDate().toLocaleDateString("pt-BR", { dateStyle: "short" })} - {item.description}</p>
 			</div>
 		</TodoItemStyles>
 	);

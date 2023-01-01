@@ -1,5 +1,5 @@
 import { Timestamp } from "firebase/firestore";
-import { useContext, useEffect, useRef } from "react";
+import { useCallback, useContext, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { TodoItem } from "../../components/TodoITem";
 import { MainContext } from "../../contexts";
@@ -16,6 +16,7 @@ const date = new Date();
 const primeiroDia = new Date(date.getFullYear(), date.getMonth(), 1).toISOString().split("T")[0];
 const ultimoDia = new Date(date.getFullYear(), date.getMonth() + 1, 0).toISOString().split("T")[0];
 
+
 export function HomePage() {
 	const { items, setItems } = useContext(MainContext);
 	const { getItems, fazerLogOff } = useQueries();
@@ -25,22 +26,30 @@ export function HomePage() {
 	const totalEntradas = useRef(0);
 	const totalSaidas = useRef(0);
 
-
-	useEffect(() => {
+	const handleGetItems = useCallback(async () => {
 		try {
-			const inicio = Timestamp.fromDate(new Date(primeiroDia));
-			const fim = Timestamp.fromDate(new Date(ultimoDia));
-			getItems({ inicio, fim })
-				.then(response => {
-					setItems(response ?? null);
-				})
-				.catch(error => {
-					console.log(error);
-				});
+			const inicio = inicioRef.current;
+			const fim = fimRef.current;
+
+			if (inicio && fim) {
+				const inicio = new Date(`${primeiroDia}T00:00:00`);
+				const fim = new Date(`${ultimoDia}T23:59:59`);
+				getItems({ inicio, fim })
+					.then(response => {
+						setItems(response ?? null);
+					})
+					.catch(error => {
+						console.log(error);
+					});
+			}
 		} catch (error) {
 			console.log(error);
 		}
 	}, [getItems, setItems]);
+
+	useEffect(() => {
+		handleGetItems();
+	}, [handleGetItems]);
 
 	const handleCalcItems = () => {
 		const result = items?.reduce((prev, curr) => {
@@ -80,25 +89,6 @@ export function HomePage() {
 		}
 	};
 
-	const handleGetItems = async () => {
-		try {
-			const inicio = inicioRef.current;
-			const fim = fimRef.current;
-
-			if (inicio && fim) {
-				getItems({ inicio: Timestamp.fromDate(new Date(inicio)), fim: Timestamp.fromDate(new Date(fim)) })
-					.then(response => {
-						setItems(response ?? null);
-					})
-					.catch(error => {
-						console.log(error);
-					});
-			}
-		} catch (error) {
-			console.log(error);
-		}
-	};
-
 	const handleLogOf = () => {
 		try {
 			fazerLogOff();
@@ -115,8 +105,8 @@ export function HomePage() {
 						fileName="Realatório"
 						document={<PDFPage
 							items={items}
-							inicio={new Date(`${inicioRef.current}`)}
-							fim={new Date(`${fimRef.current}`)}
+							inicio={new Date(`${inicioRef.current}T00:00:00`)}
+							fim={new Date(`${fimRef.current}T23:59:59`)}
 						/>}
 					>
 						<button className="export-button litte-button">
