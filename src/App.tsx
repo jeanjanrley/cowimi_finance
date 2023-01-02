@@ -1,11 +1,14 @@
 import { MainContextProvider } from "./contexts";
 import { MainRoutes } from "./routes";
 import "./App.scss";
+import { HashRouter } from "react-router-dom";
 
 function App() {
 	return (
 		<MainContextProvider>
-			<MainRoutes />
+			<HashRouter>
+				<MainRoutes />
+			</HashRouter>
 		</MainContextProvider>
 	);
 }

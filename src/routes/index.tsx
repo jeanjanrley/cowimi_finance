@@ -5,6 +5,7 @@ import { auth } from "../firebase";
 import { AddItemPage } from "../pages/AddItem";
 import { HomePage } from "../pages/Home";
 import { LoginPage } from "../pages/Login";
+import { PageNotFound } from "../pages/PageNotFound";
 
 
 export function MainRoutes() {
@@ -21,18 +22,19 @@ export function MainRoutes() {
 	}, [setUser]);
 
 	return (
-		<BrowserRouter>
-			<Routes>
-				{
-					user ?
-						<>
-							<Route path="/" element={<HomePage />} />
-							<Route path="addItem" element={<AddItemPage />} />
-						</>
-						:
+		<Routes>
+			<Route path="*" element={<PageNotFound />} />
+			{
+				user ?
+					<>
+						<Route path="/" element={<HomePage />} />
+						<Route path="addItem" element={<AddItemPage />} />
+					</>
+					:
+					<>
 						<Route path="/" element={<LoginPage />} />
-				}
-			</Routes>
-		</BrowserRouter>
+					</>
+			}
+		</Routes>
 	);
 }
