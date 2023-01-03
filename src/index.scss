@@ -5,7 +5,6 @@
 	font-weight: 400;
 
 	color-scheme: light dark;
-	color: rgba(255, 255, 255, 0.87);
 	background-color: #242424;
 
 	font-synthesis: none;
@@ -35,7 +34,6 @@ body {
 
 input,
 button {
-	height: 40px;
 	border-radius: 4px;
 	border: 1px solid #777;
 	box-shadow: none;
@@ -54,5 +52,5 @@ button {
 .page {
 	height: 100%;
 	//background: red;
-	padding: 16px;
+	padding: 12px;
 }

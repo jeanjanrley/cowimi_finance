@@ -1,0 +1,63 @@
+.add-item-page {
+	.container-area {
+		display: flex;
+		flex-direction: column;
+		margin: 0 auto;
+		width: 100%;
+		max-width: 460px;
+		padding: 12px 0;
+		height: 100%;
+		gap: 12px;
+
+		.header-area {
+			display: flex;
+			gap: 8px;
+			padding: 8px;
+			border-radius: 4px;
+			background: #8C4CAA;
+
+			h2 {
+				font-size: 16px;
+				color: #fff;
+			}
+		}
+
+		.form-area {
+			display: flex;
+			flex: 1;
+			flex-direction: column;
+			gap: 12px;
+			border-radius: 8px;
+			padding: 8px;
+			background-color: #303030;
+
+			.container-box {
+				display: flex;
+				flex-direction: column;
+				gap: 4px;
+				width: 100%;
+
+				.radios-box {
+					width: 100%;
+					display: flex;
+					flex-direction: row;
+					gap: 32px;
+					border: 1px dashed #ddd;
+					padding: 8px;
+					border-radius: 8px;
+
+					.input-box {
+						display: flex;
+						flex-direction: row;
+						align-items: center;
+						gap: 8px;
+					}
+				}
+			}
+
+			button {
+				font-size: 18px;
+			}
+		}
+	}
+}

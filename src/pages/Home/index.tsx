@@ -6,24 +6,53 @@ import { useQueries } from "../../hooks/useQueries";
 import { parserLocale } from "../../utils/parses";
 import { FaSearch } from "react-icons/fa";
 import "./styles.scss";
-import { BiLogOut } from "react-icons/bi";
+import { BiEdit, BiLogOut } from "react-icons/bi";
 import { MdPictureAsPdf } from "react-icons/md";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import { PDFPage } from "../../PdfComponents/Page";
+import Select, { } from "react-select";
+import { CompanyProps, ValueTypes } from "../../types";
+import { selectStyles } from "../../utils/selectStyles";
+import { Button } from "../../components/Button";
+import { AiOutlinePlus } from "react-icons/ai";
+import Swal from "sweetalert2";
 
 const date = new Date();
 const primeiroDia = new Date(date.getFullYear(), date.getMonth(), 1).toISOString().split("T")[0];
 const ultimoDia = new Date(date.getFullYear(), date.getMonth() + 1, 0).toISOString().split("T")[0];
 
 export function HomePage() {
-	const { items, setItems } = useContext(MainContext);
-	const { getItems, fazerLogOff } = useQueries();
+	const { items, setItems, user, empresa, setEmpresa, empresas, setEmpresas } = useContext(MainContext);
+	const { getItems, fazerLogOff, getCompanys } = useQueries();
 	const navigate = useNavigate();
 	const [inicio, setInicio] = useState(primeiroDia);
 	const [fim, setFim] = useState(ultimoDia);
 	const totalEntradas = useRef(0);
 	const totalSaidas = useRef(0);
+	const [optionsEmpresas, setOptionsEmpresas] = useState<ValueTypes<CompanyProps>[] | null>(null);
 
+	// Busca as empresas
+	useEffect(() => {
+		user && user.uid && getCompanys({ userId: user?.uid })
+			.then(result => {
+				setEmpresas(result ?? null);
+			})
+			.catch((error) => {
+				console.log(error);
+				setEmpresas(null);
+			});
+	}, [getCompanys, setEmpresas, user]);
+
+	// Seta as opções de empresas
+	useEffect(() => {
+		const options = empresas?.map(empresa => {
+			return { label: empresa.nomeFantasia, value: empresa } as ValueTypes<CompanyProps>;
+		});
+
+		setOptionsEmpresas(options ?? null);
+	}, [empresas]);
+
+	// Busca os itens
 	useEffect(() => {
 		getItems({ inicio: new Date(primeiroDia), fim: new Date(ultimoDia) })
 			.then(response => {
@@ -86,6 +115,28 @@ export function HomePage() {
 		}
 	};
 
+	const handleAddCompany = () => {
+		try {
+			navigate("addCompany");
+		}
+		catch (error) {
+			console.log(error);
+		}
+	};
+
+	const handleEditCompany = () => {
+		try {
+			if (!empresa) {
+				Swal.fire("Erro", "Nenhum empresa selecionada!", "error");
+				return;
+			}
+			navigate("addCompany", { state: { company: empresa } });
+		}
+		catch (error) {
+			console.log(error);
+		}
+	};
+
 	const handleLogOf = () => {
 		try {
 			fazerLogOff();
@@ -106,9 +157,9 @@ export function HomePage() {
 							fim={new Date(`${fim}T23:59:59`)}
 						/>}
 					>
-						<button className="export-button litte-button">
+						<Button className="export-button litte-button">
 							<MdPictureAsPdf color="#fff" size={18} />
-						</button>
+						</Button>
 					</PDFDownloadLink>
 				);
 			}
@@ -127,7 +178,7 @@ export function HomePage() {
 						<h2>{parserLocale(totalEntradas.current)}</h2>
 					</div>
 					<div className="header-box second-box">
-						<h3>Saída</h3>
+						<h3>Saídas</h3>
 						<h2>{parserLocale(totalSaidas.current)}</h2>
 					</div>
 				</div>
@@ -150,20 +201,41 @@ export function HomePage() {
 							/>
 						</div>
 					</div>
-					<button className="find-button" onClick={handleGetItems}>
-						<p>Buscar</p>
-						<FaSearch color="#fff" size={16} />
-					</button>
+					<div className="button-area">
+						{
+							empresa &&
+							<button className="edit-company-button" onClick={handleEditCompany}>
+								<BiEdit color="#fff" size={16} />
+							</button>
+						}
+						<div className="select-area">
+							<label htmlFor="empresa">Empresa</label>
+							<Select
+								id="empresa"
+								placeholder="Selecione uma empresa"
+								options={optionsEmpresas ?? []}
+								onChange={event => setEmpresa(event?.value ?? null)}
+								styles={selectStyles}
+								defaultValue={optionsEmpresas?.[0]}
+							/>
+						</div>
+						<button className="add-company-button" onClick={handleAddCompany}>
+							<AiOutlinePlus color="#fff" size={16} />
+						</button>
+						<button className="find-button" onClick={handleGetItems}>
+							<FaSearch color="#fff" size={16} />
+						</button>
+					</div>
 				</div>
 				<div className="items-area">
 					{items?.map(item => <TodoItem key={item.id} item={item} />)}
 				</div>
 				<div className="buttons-area">
 					<>
-						<button className="logOff-button litte-button" onClick={handleLogOf}>
+						<Button className="logOff-button litte-button" onClick={handleLogOf}>
 							<BiLogOut color="#fff" size={18} />
-						</button>
-						<button className="main-button" onClick={handleAddItem}>Adicionar novo</button>
+						</Button>
+						<Button className="main-button" onClick={handleAddItem}>Adicionar novo</Button>
 						{PDFBUTTON ?? null}
 					</>
 				</div>

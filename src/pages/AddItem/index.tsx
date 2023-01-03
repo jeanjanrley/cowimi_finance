@@ -11,6 +11,7 @@ import { cleanObject } from "../../utils/cleanObject";
 import { useNavigate, useLocation } from "react-router-dom";
 import { confirmMiddleware } from "../../utils/middlewares";
 import { MainContext } from "../../contexts";
+import Swal from "sweetalert2";
 
 
 export function AddItemPage() {
@@ -81,8 +82,6 @@ export function AddItemPage() {
 				vencimento: Timestamp.fromDate(new Date(`${data.vencimento}T00:00:00`)),
 				status: status,
 				tipo: tipo,
-				createdAt: Timestamp.now(),
-				owner: user?.uid ?? null,
 			});
 
 			// Verifica se edita ou salva o item
@@ -92,8 +91,17 @@ export function AddItemPage() {
 			}
 
 			if (item) {
+				newItem.updatedAt = Timestamp.now();
+				newItem.updatedBy = user?.uid;
+
 				item.id && await editItem({ itemId: item.id, item: newItem });
 			} else {
+				newItem.createdAt = Timestamp.now();
+
+				if (user?.uid) {
+					newItem.owner = user?.uid;
+				}
+
 				await createItem({ item: newItem });
 			}
 

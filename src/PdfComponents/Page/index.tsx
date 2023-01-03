@@ -8,7 +8,7 @@ const styles = StyleSheet.create({
 	page: {
 		display: "flex",
 		flexDirection: "column",
-		backgroundColor: "#E4E4E4",
+		border: "1px dashed #000",
 		padding: 16,
 	},
 	headerArea: {
@@ -27,20 +27,21 @@ const styles = StyleSheet.create({
 		height: "100%",
 		width: "49%",
 		borderRadius: 8,
+		border: "1px dashed #000"
 	},
 	headerTitle: {
-		color: "#fff",
+		color: "#000",
 		fontSize: 24
 	},
 	headerText: {
-		color: "#fff",
+		color: "#000",
 		fontSize: 16
 	},
 	subHeader: {
 		display: "flex",
 		flexDirection: "row",
 		justifyContent: "space-between",
-		backgroundColor: "#ccc",
+		border: "1px dashed #000",
 		padding: 8,
 		marginBottom: 12,
 		borderRadius: 8
@@ -48,7 +49,7 @@ const styles = StyleSheet.create({
 	contentArea: {
 		width: "100%",
 		flexGrow: 1,
-		backgroundColor: "#ccc",
+		border: "1px dashed #000",
 		borderRadius: 8,
 		padding: 12
 	},
@@ -58,7 +59,7 @@ const styles = StyleSheet.create({
 		flexDirection: "column",
 		marginBottom: 8,
 		paddingBottom: 4,
-		borderBottom: "1px solid #777"
+		borderBottom: "1px solid #000"
 	},
 	headerTitleItem: {
 		width: "100%",
@@ -70,7 +71,7 @@ const styles = StyleSheet.create({
 		fontSize: 14,
 	},
 	textItem: {
-		color: "#777",
+		color: "#000",
 		fontSize: 12,
 	},
 });
@@ -128,11 +129,11 @@ export const PDFPage = ({ items, fim, inicio }: PDFPageProps) => {
 		<Document>
 			<Page size="A4" style={styles.page}>
 				<View style={styles.headerArea}>
-					<View style={{ ...styles.headerBox, backgroundColor: "#3AC977" }}>
+					<View style={{ ...styles.headerBox }}>
 						<Text style={styles.headerTitle}>Entradas</Text>
 						<Text style={styles.headerText}>{parserLocale(totalEntradas.current)}</Text>
 					</View>
-					<View style={{ ...styles.headerBox, backgroundColor: "#d2531c" }}>
+					<View style={{ ...styles.headerBox }}>
 						<Text style={styles.headerTitle}>Saídas</Text>
 						<Text style={styles.headerText}>{parserLocale(totalSaidas.current)}</Text>
 					</View>

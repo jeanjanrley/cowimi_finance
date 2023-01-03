@@ -5,7 +5,6 @@
 		margin: 0 auto;
 		width: 100%;
 		max-width: 460px;
-		padding: 12px 0;
 		height: 100%;
 		gap: 12px;
 
@@ -52,23 +51,50 @@
 					>input {
 						width: 100%;
 						padding: 4px;
+						height: 40px;
 					}
 				}
 
 			}
 
-			.find-button {
+			.button-area {
 				display: flex;
-				align-items: center;
-				justify-content: center;
+				flex-direction: row;
+				align-items: flex-end;
+				gap: 8px;
 				width: 100%;
-				cursor: pointer;
-				gap: 12px;
-				height: 35px;
-				border: none;
-				background: #3AC977;
-				font-size: 16px;
+
+				.select-area {
+					display: flex;
+					flex-direction: column;
+					flex-grow: 1;
+				}
+
+				.find-button,
+				.add-company-button,
+				.edit-company-button {
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					cursor: pointer;
+					gap: 12px;
+					height: 38px;
+					width: 38px;
+					border: none;
+					background: #3AC977;
+					font-size: 16px;
+					margin-bottom: -3px;
+				}
+
+				.add-company-button {
+					background: #2b80b6;
+				}
+
+				.edit-company-button {
+					background: #8C4CAA;
+				}
 			}
+
 
 		}
 
@@ -92,6 +118,7 @@
 			>button {
 				background: #8C4CAA;
 				font-size: 18px;
+				width: 40px;
 
 				&:hover {
 					outline: 1px solid #fff;

@@ -3,13 +3,13 @@ import { validate } from "email-validator";
 import { auth, db } from "../firebase";
 import { browserLocalPersistence, signInWithEmailAndPassword } from "firebase/auth";
 import { addDoc, collection, deleteDoc, doc, getDocs, query, Timestamp, updateDoc, where } from "firebase/firestore";
-import { TodoItemProps } from "../types";
+import { CompanyProps, TodoItemProps } from "../types";
 import { useCallback } from "react";
 import { MainContext } from "../contexts";
 import { useContext } from "react";
 
 export function useQueries() {
-	const { user } = useContext(MainContext);
+	const { user, empresa } = useContext(MainContext);
 
 	/**Middleware que verifica se está tudo ok para fazer login */
 	const logginMiddleware = ({ email, password }: { email: string; password: string }) => {
@@ -99,6 +99,11 @@ export function useQueries() {
 	/**Cria novos itens */
 	const createItem = async ({ item }: { item: TodoItemProps }) => {
 		try {
+			if (!empresa) {
+				Swal.fire("Erro", "Nenhum empresa selecionada!", "error");
+				return;
+			}
+
 			const ref = collection(db, "items");
 			await addDoc(ref, item);
 			Swal.fire("Sucesso", "Item adicionado com sucesso!", "success");
@@ -111,6 +116,11 @@ export function useQueries() {
 	/**Cria novos itens */
 	const editItem = async ({ itemId, item }: { itemId: string, item: TodoItemProps }) => {
 		try {
+			if (!empresa) {
+				Swal.fire("Erro", "Nenhum empresa selecionada!", "error");
+				return;
+			}
+
 			const ref = doc(db, `items/${itemId}`);
 			await updateDoc(ref, item as any);
 			Swal.fire("Sucesso", "Item atualizado com sucesso!", "success");
@@ -158,12 +168,57 @@ export function useQueries() {
 		}
 	};
 
+	/**Funcionalidade para adicionar empresas */
+	const createCompany = async ({ company }: { company: CompanyProps }) => {
+		try {
+			const referencia = collection(db, "empresas");
+			const snapshot = await addDoc(referencia, company);
+			if (snapshot.id) {
+				Swal.fire("Sucesso", "Empresa adicionada com sucesso!", "success");
+			}
+		} catch (error) {
+			console.log(error);
+			Swal.fire("Erro", "Houve um erro ao tentar adicionar esta empresa!", "error");
+		}
+	};
+
+	/**Funcionalidade para adicionar empresas */
+	const editCompany = async ({ companyId, company }: { companyId: string; company: CompanyProps }) => {
+		try {
+			const referencia = doc(db, `empresas/${companyId}`);
+			const snapshot = await updateDoc(referencia, company as any);
+			Swal.fire("Sucesso", "Empresa atualizada com sucesso!", "success");
+		} catch (error) {
+			console.log(error);
+			Swal.fire("Erro", "Houve um erro ao tentar atualizar esta empresa!", "error");
+		}
+	};
+
+	const getCompanys = useCallback(async ({ userId }: { userId: string }) => {
+		try {
+			const referencia = collection(db, "empresas");
+			const queryRef = query(
+				referencia,
+				where("users", "array-contains", userId)
+			);
+			const snapshot = await getDocs(queryRef);
+			const empresas = snapshot.docs.map(item => ({ ...item.data(), id: item.id } as CompanyProps));
+			console.log("Empresas: ", empresas);
+			return empresas;
+		} catch (error) {
+			console.log(error);
+		}
+	}, []);
+
 	return {
 		fazerLogin,
 		fazerLogOff,
 		createItem,
 		getItems,
 		deleteItem,
-		editItem
+		editItem,
+		createCompany,
+		editCompany,
+		getCompanys
 	};
 }

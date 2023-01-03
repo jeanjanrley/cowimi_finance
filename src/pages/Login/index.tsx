@@ -10,6 +10,7 @@ import { validate } from "email-validator";
 import Swal from "sweetalert2";
 import { sendPasswordResetEmail } from "firebase/auth";
 import { auth } from "../../firebase";
+import { Button } from "../../components/Button";
 
 export function LoginPage() {
 	const { fazerLogin } = useQueries();
@@ -109,7 +110,7 @@ export function LoginPage() {
 							onClick={handleForgot}>
 							Esqueci minha senha
 						</label>
-						<button>Fazer login</button>
+						<Button>Fazer login</Button>
 					</Form>
 				</div>
 			</div>
