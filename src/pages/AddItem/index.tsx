@@ -15,6 +15,7 @@ import Swal from "sweetalert2";
 import { selectStyles } from "../../utils/selectStyles";
 import { Select } from "../../components/Select";
 import { SelectInstance, GroupBase } from "react-select";
+import { Button } from "../../components/Button";
 
 export function AddItemPage() {
 	const { user, optionsEmpresas, setEmpresa, empresa, empresas } = useContext(MainContext);
@@ -259,7 +260,7 @@ export function AddItemPage() {
 								</div>
 							</div>
 					}
-					<button>Salvar</button>
+					<Button>Salvar</Button>
 				</Form>
 			</div>
 		</div>
