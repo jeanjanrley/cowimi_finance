@@ -2,11 +2,12 @@ import Swal from "sweetalert2";
 import { validate } from "email-validator";
 import { auth, db } from "../firebase";
 import { browserLocalPersistence, signInWithEmailAndPassword } from "firebase/auth";
-import { addDoc, collection, deleteDoc, doc, getDocs, query, Timestamp, updateDoc, where } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getDocs, limit, query, Timestamp, updateDoc, where } from "firebase/firestore";
 import { CompanyProps, TodoItemProps } from "../types";
 import { useCallback } from "react";
 import { MainContext } from "../contexts";
 import { useContext } from "react";
+import { confirmMiddleware } from "../utils/middlewares";
 
 export function useQueries() {
 	const { user, empresa } = useContext(MainContext);
@@ -54,7 +55,6 @@ export function useQueries() {
 		} catch (error) {
 			console.log(error);
 			const { code } = error as any;
-			console.log("Code: ", code);
 			switch (code) {
 				case "auth/wrong-password":
 					Swal.fire("Erro", "Usário ou senha icorreto!", "error");
@@ -126,7 +126,7 @@ export function useQueries() {
 	};
 
 	/**Otem uma lista de items */
-	const getItems = useCallback(async ({ inicio: inicioRef, fim: fimRef, empresa }: { inicio: Date; fim: Date, empresa?: CompanyProps }) => {
+	const getItems = useCallback(async ({ inicio: inicioRef, fim: fimRef }: { inicio: Date; fim: Date }) => {
 		try {
 			const ref = collection(db, "items");
 			const inicio = Timestamp.fromDate(new Date(`${inicioRef.toISOString().split("T")[0]}T00:00`));
@@ -136,7 +136,6 @@ export function useQueries() {
 				where("vencimento", ">=", inicio),
 				where("vencimento", "<=", fim),
 				where("owner", "==", user?.uid),
-				empresa?.id ? where("empresa", "==", empresa?.id) : where("owner", "==", user?.uid),
 			);
 
 			const snapshot = await getDocs(queryRef);
@@ -161,14 +160,42 @@ export function useQueries() {
 		}
 	};
 
-	/**Funcionalidade para adicionar empresas */
-	const createCompany = async ({ company }: { company: CompanyProps }) => {
+	/**funcionalidade para buscar empresas */
+	const getCompany = useCallback(async ({ userId }: { userId: string }) => {
 		try {
 			const referencia = collection(db, "empresas");
-			const snapshot = await addDoc(referencia, company);
-			if (snapshot.id) {
-				Swal.fire("Sucesso", "Empresa adicionada com sucesso!", "success");
+			const queryRef = query(
+				referencia,
+				where("owner", "==", userId),
+				limit(1)
+			);
+			const snapshot = await getDocs(queryRef);
+			const empresas = snapshot.docs.map(item => ({ ...item.data(), id: item.id } as CompanyProps));
+			return empresas[0];
+		} catch (error) {
+			console.log(error);
+		}
+	}, []);
+
+	/**Funcionalidade para adicionar empresas */
+	const createCompany = async ({ company }: { company: CompanyProps }) => {
+
+		try {
+			if (user) {
+				const result = await getCompany({ userId: user?.uid });
+
+				if (result) {
+					Swal.fire("Erro", "Já existe uma empresa cadastrada para este usuário!", "error");
+					return;
+				}
+
+				const referencia = collection(db, "empresas");
+				const snapshot = await addDoc(referencia, company);
+				if (snapshot.id) {
+					Swal.fire("Sucesso", "Empresa adicionada com sucesso!", "success");
+				}
 			}
+
 		} catch (error) {
 			console.log(error);
 			Swal.fire("Erro", "Houve um erro ao tentar adicionar esta empresa!", "error");
@@ -179,7 +206,7 @@ export function useQueries() {
 	const editCompany = async ({ companyId, company }: { companyId: string; company: CompanyProps }) => {
 		try {
 			const referencia = doc(db, `empresas/${companyId}`);
-			const snapshot = await updateDoc(referencia, company as any);
+			await updateDoc(referencia, company as any);
 			Swal.fire("Sucesso", "Empresa atualizada com sucesso!", "success");
 		} catch (error) {
 			console.log(error);
@@ -187,22 +214,22 @@ export function useQueries() {
 		}
 	};
 
-	const getCompanys = useCallback(async ({ userId }: { userId: string }) => {
+	const deleteCompany = async ({ empresaId }: { empresaId: string }) => {
 		try {
-			const referencia = collection(db, "empresas");
-			const queryRef = query(
-				referencia,
-				where("users", "array-contains", userId)
-			);
-			const snapshot = await getDocs(queryRef);
-			const empresas = snapshot.docs.map(item => ({ ...item.data(), id: item.id } as CompanyProps));
-			console.log("Empresas: ", empresas);
-			return empresas;
-		} catch (error) {
-			console.log(error);
-		}
-	}, []);
+			const result = await confirmMiddleware();
+			if (!result) {
+				return;
+			}
 
+			const referencia = doc(db, `empresas/${empresaId}`);
+			await deleteDoc(referencia);
+			Swal.fire("Sucesso!", "Empresa deletada com sucesso!", "success");
+		}
+		catch (error) {
+			console.log(error);
+			Swal.fire("Erro", "Houve um erro ao realizar esta ação!", "error");
+		}
+	};
 	return {
 		fazerLogin,
 		fazerLogOff,
@@ -212,6 +239,7 @@ export function useQueries() {
 		editItem,
 		createCompany,
 		editCompany,
-		getCompanys
+		getCompany,
+		deleteCompany
 	};
 }

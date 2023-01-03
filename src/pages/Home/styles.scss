@@ -21,7 +21,7 @@
 				flex-grow: 1;
 			}
 
-			.find-button,
+			.search-button,
 			.add-company-button,
 			.edit-company-button {
 				display: flex;
@@ -141,6 +141,10 @@
 
 			.export-button {
 				background: #DA0F12;
+			}
+
+			.search-button {
+				background: #3AC977;
 			}
 
 

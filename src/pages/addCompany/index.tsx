@@ -4,23 +4,21 @@ import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { useQueries } from "../../hooks/useQueries";
 import "./styles.scss";
 import * as Yup from "yup";
-import { CompanyProps, TodoItemProps, TodoStatusTypes, TodoType } from "../../types";
+import { CompanyProps } from "../../types";
 import { Input } from "../../components/Input";
-import { Timestamp, arrayUnion } from "firebase/firestore";
+import { Timestamp } from "firebase/firestore";
 import { cleanObject } from "../../utils/cleanObject";
 import { useNavigate, useLocation } from "react-router-dom";
 import { confirmMiddleware } from "../../utils/middlewares";
 import { MainContext } from "../../contexts";
 import axios from "axios";
-import { timeStamp } from "console";
 import { Button } from "../../components/Button";
-import { BiArrowBack } from "react-icons/bi";
 import { HeaderPage } from "../../components/HeaderPage";
 
 export function AddCompanyPage() {
-	const { user, setEmpresas } = useContext(MainContext);
+	const { user, setEmpresa } = useContext(MainContext);
 	const formRef = useRef<FormHandles>(null);
-	const { createCompany, editCompany, getCompanys } = useQueries();
+	const { createCompany, editCompany, getCompany } = useQueries();
 	const navigate = useNavigate();
 	const { state } = useLocation();
 	const [cnpj, setCnpj] = useState("");
@@ -121,7 +119,6 @@ export function AddCompanyPage() {
 				company.id && await editCompany({ companyId: company.id, company: newCompany });
 			} else {
 				if (user?.uid) {
-					newCompany.users = [user.uid];
 					newCompany.owner = user?.uid;
 				}
 
@@ -129,13 +126,13 @@ export function AddCompanyPage() {
 				await createCompany({ company: newCompany });
 			}
 
-			user && user.uid && getCompanys({ userId: user?.uid })
+			user && user.uid && getCompany({ userId: user?.uid })
 				.then(result => {
-					setEmpresas(result ?? null);
+					setEmpresa(result ?? null);
 				})
 				.catch((error) => {
 					console.log(error);
-					setEmpresas(null);
+					setEmpresa(null);
 				});
 
 			comeBack();

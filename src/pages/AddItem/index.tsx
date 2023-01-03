@@ -4,22 +4,18 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { useQueries } from "../../hooks/useQueries";
 import "./styles.scss";
 import * as Yup from "yup";
-import { CompanyProps, TodoItemProps, TodoStatusTypes, TodoType, ValueTypes } from "../../types";
+import { TodoItemProps, TodoStatusTypes, TodoType } from "../../types";
 import { Input } from "../../components/Input";
 import { Timestamp } from "firebase/firestore";
 import { cleanObject } from "../../utils/cleanObject";
 import { useNavigate, useLocation } from "react-router-dom";
 import { confirmMiddleware } from "../../utils/middlewares";
 import { MainContext } from "../../contexts";
-import Swal from "sweetalert2";
-import { selectStyles } from "../../utils/selectStyles";
-import { Select } from "../../components/Select";
-import { SelectInstance, GroupBase } from "react-select";
 import { Button } from "../../components/Button";
 import { HeaderPage } from "../../components/HeaderPage";
 
 export function AddItemPage() {
-	const { user, optionsEmpresas, setEmpresa, empresa, empresas, setItems } = useContext(MainContext);
+	const { user, empresa, setItems } = useContext(MainContext);
 	const formRef = useRef<FormHandles>(null);
 	const [item, setItem] = useState<TodoItemProps | null>(null);
 	const [status, setStatus] = useState<TodoStatusTypes>("PENDENTE");
@@ -27,13 +23,6 @@ export function AddItemPage() {
 	const { createItem, editItem } = useQueries();
 	const navigate = useNavigate();
 	const { state } = useLocation();
-	const selectRef = useRef<SelectInstance<ValueTypes, false, GroupBase<ValueTypes>> | null>(null);
-	const [defaultValue, setDefaultValue] = useState<ValueTypes<CompanyProps>>();
-
-	useEffect(() => {
-		const value = empresa ? { label: empresa?.nomeFantasia, value: empresa } : optionsEmpresas?.[0];
-		setDefaultValue(value);
-	}, [empresa, optionsEmpresas]);
 
 	useEffect(() => {
 		try {
@@ -47,7 +36,6 @@ export function AddItemPage() {
 				formRef.current?.setData({
 					...item,
 					vencimento: vencimento,
-					empresa: empresas?.find(empresa => empresa?.id === item?.empresa)?.nomeFantasia ?? "",
 				});
 
 				setStatus(item.status);
@@ -56,7 +44,7 @@ export function AddItemPage() {
 		} catch (error) {
 			console.log(error);
 		}
-	}, [empresas, state]);
+	}, [state]);
 
 	const comeBack = () => {
 		try {
@@ -143,20 +131,6 @@ export function AddItemPage() {
 					ref={formRef}
 					className="form-area"
 				>
-					<div className="select-area">
-						<label htmlFor="empresa">Empresa</label>
-						<Select
-							name="empresa"
-							selectRef={selectRef}
-							id="empresa"
-							placeholder="Selecione uma empresa"
-							options={optionsEmpresas ?? []}
-							onChange={event => setEmpresa(event?.value ?? null)}
-							styles={selectStyles}
-							defaultValue={defaultValue}
-							isClearable
-						/>
-					</div>
 					<Input
 						name="title"
 						label="Titulo"

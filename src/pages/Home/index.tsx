@@ -6,32 +6,51 @@ import { useQueries } from "../../hooks/useQueries";
 import { parserLocale } from "../../utils/parses";
 import { FaSearch } from "react-icons/fa";
 import "./styles.scss";
-import { BiEdit, BiLogOut } from "react-icons/bi";
+import { BiLogOut } from "react-icons/bi";
 import { MdPictureAsPdf } from "react-icons/md";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import { PDFPage } from "../../PdfComponents/Page";
-import Select, { } from "react-select";
-import { CompanyProps, TodoItemProps, ValueTypes } from "../../types";
-import { selectStyles } from "../../utils/selectStyles";
+import { TodoItemProps } from "../../types";
 import { Button } from "../../components/Button";
-import { AiOutlinePlus } from "react-icons/ai";
-import Swal from "sweetalert2";
+import { EmpresaComponent } from "../../components/EmpresaComponent";
 
 const date = new Date();
 const primeiroDia = new Date(date.getFullYear(), date.getMonth(), 1).toISOString().split("T")[0];
 const ultimoDia = new Date(date.getFullYear(), date.getMonth() + 1, 0).toISOString().split("T")[0];
 
 export function HomePage() {
-	const { items, setItems, user, empresa, setEmpresa, empresas, setEmpresas, optionsEmpresas, setOptionsEmpresas } = useContext(MainContext);
-	const { getItems, fazerLogOff, getCompanys } = useQueries();
+	const { items, setItems, user, empresa, setEmpresa } = useContext(MainContext);
+	const { getItems, fazerLogOff, getCompany } = useQueries();
 	const navigate = useNavigate();
 	const [inicio, setInicio] = useState(primeiroDia);
 	const [fim, setFim] = useState(ultimoDia);
 	const totalEntradas = useRef(0);
 	const totalSaidas = useRef(0);
-	const [defaultValue, setDefaultValue] = useState<ValueTypes<CompanyProps>>();
 	const [reorderedItems, setReorderedItems] = useState<TodoItemProps[] | null>();
 
+	// Busca a empresa cadastrada
+	useEffect(() => {
+		user && getCompany({ userId: user.uid })
+			.then(response => setEmpresa(response ?? null))
+			.catch(error => {
+				console.log(error);
+				setEmpresa(null);
+			});
+	}, [getCompany, setEmpresa, user]);
+
+	// Busca os itens
+	useEffect(() => {
+		getItems({ inicio: new Date(primeiroDia), fim: new Date(ultimoDia) })
+			.then(response => {
+				setItems(response ?? null);
+			})
+			.catch(error => {
+				console.log(error);
+				setItems(null);
+			});
+	}, [empresa, getItems, setItems]);
+
+	// Reordena os itens por data
 	useEffect(() => {
 		try {
 			if (items) {
@@ -43,47 +62,9 @@ export function HomePage() {
 		}
 	}, [items]);
 
-	useEffect(() => {
-		const value = empresa ? { label: empresa?.nomeFantasia, value: empresa } : optionsEmpresas?.[0];
-		setDefaultValue(value);
-	}, [empresa, optionsEmpresas]);
-
-	// Busca as empresas
-	useEffect(() => {
-		user && user.uid && getCompanys({ userId: user?.uid })
-			.then(result => {
-				setEmpresas(result ?? null);
-			})
-			.catch((error) => {
-				console.log(error);
-				setEmpresas(null);
-			});
-	}, [getCompanys, setEmpresas, user]);
-
-	// Seta as opções de empresas
-	useEffect(() => {
-		const options = empresas?.map(empresa => {
-			return { label: empresa.nomeFantasia, value: empresa } as ValueTypes<CompanyProps>;
-		});
-
-		setOptionsEmpresas(options ?? null);
-	}, [empresas, setOptionsEmpresas]);
-
-	// Busca os itens
-	useEffect(() => {
-		getItems({ inicio: new Date(primeiroDia), fim: new Date(ultimoDia), empresa: empresa ?? undefined })
-			.then(response => {
-				setItems(response ?? null);
-			})
-			.catch(error => {
-				console.log(error);
-				setItems(null);
-			});
-	}, [empresa, getItems, setItems]);
-
 	const handleGetItems = async () => {
 		if (inicio && fim) {
-			getItems({ inicio: new Date(inicio), fim: new Date(fim), empresa: empresa ?? undefined })
+			getItems({ inicio: new Date(inicio), fim: new Date(fim) })
 				.then(response => {
 					setItems(response ?? null);
 				})
@@ -132,28 +113,6 @@ export function HomePage() {
 		}
 	};
 
-	const handleAddCompany = () => {
-		try {
-			navigate("addCompany");
-		}
-		catch (error) {
-			console.log(error);
-		}
-	};
-
-	const handleEditCompany = () => {
-		try {
-			if (!empresa) {
-				Swal.fire("Erro", "Nenhum empresa selecionada!", "error");
-				return;
-			}
-			navigate("addCompany", { state: { company: empresa } });
-		}
-		catch (error) {
-			console.log(error);
-		}
-	};
-
 	const handleLogOf = () => {
 		try {
 			fazerLogOff();
@@ -190,32 +149,7 @@ export function HomePage() {
 	return (
 		<div className="page home-page">
 			<div className="container-area">
-				<div className="filters-area">
-					{
-						empresa &&
-						<button className="edit-company-button" onClick={handleEditCompany}>
-							<BiEdit color="#fff" size={16} />
-						</button>
-					}
-					<div className="select-area">
-						<label htmlFor="empresa">Empresa</label>
-						<Select
-							id="empresa"
-							placeholder="Selecione uma empresa"
-							options={optionsEmpresas ?? []}
-							onChange={event => setEmpresa(event?.value ?? null)}
-							styles={selectStyles}
-							defaultValue={defaultValue}
-							isClearable
-						/>
-					</div>
-					<button className="add-company-button" onClick={handleAddCompany}>
-						<AiOutlinePlus color="#fff" size={16} />
-					</button>
-					<button className="find-button" onClick={handleGetItems}>
-						<FaSearch color="#fff" size={16} />
-					</button>
-				</div>
+				<EmpresaComponent empresa={empresa ?? undefined} />
 				<div className="periodo-area">
 					<div className="dates-area">
 						<div className="periodo-box">
@@ -256,6 +190,9 @@ export function HomePage() {
 						</Button>
 						<Button className="main-button" onClick={handleAddItem}>Adicionar novo</Button>
 						{PDFBUTTON ?? null}
+						<Button className="search-button litte-button" onClick={handleGetItems}>
+							<FaSearch color="#fff" size={18} />
+						</Button>
 					</>
 				</div>
 			</div>

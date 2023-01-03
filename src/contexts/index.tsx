@@ -1,6 +1,6 @@
 import { User } from "firebase/auth";
 import { createContext, Dispatch, SetStateAction, useState } from "react";
-import { CompanyProps, TodoItemProps, ValueTypes } from "../types";
+import { CompanyProps, TodoItemProps } from "../types";
 import { useEffect } from "react";
 
 interface MainContextProps {
@@ -10,10 +10,6 @@ interface MainContextProps {
 	setItems: Dispatch<SetStateAction<TodoItemProps[] | null>>;
 	empresa: CompanyProps | null;
 	setEmpresa: Dispatch<SetStateAction<CompanyProps | null>>
-	empresas: CompanyProps[] | null;
-	setEmpresas: Dispatch<SetStateAction<CompanyProps[] | null>>
-	optionsEmpresas: ValueTypes<CompanyProps>[] | null;
-	setOptionsEmpresas: Dispatch<SetStateAction<ValueTypes<CompanyProps>[] | null>>;
 }
 
 export const MainContext = createContext<MainContextProps>({} as MainContextProps);
@@ -22,9 +18,6 @@ export function MainContextProvider({ children }: { children: React.ReactNode; }
 	const [items, setItems] = useState<TodoItemProps[] | null>(null);
 	const [user, setUser] = useState<User | null>(null);
 	const [empresa, setEmpresa] = useState<CompanyProps | null>(null);
-	const [empresas, setEmpresas] = useState<CompanyProps[] | null>(null);
-	const [optionsEmpresas, setOptionsEmpresas] = useState<ValueTypes<CompanyProps>[] | null>(null);
-
 
 	useEffect(() => {
 		try {
@@ -39,8 +32,7 @@ export function MainContextProvider({ children }: { children: React.ReactNode; }
 	return (
 		<MainContext.Provider value={{
 			items, setItems, user, setUser,
-			empresa, setEmpresa, empresas,
-			setEmpresas, optionsEmpresas, setOptionsEmpresas
+			empresa, setEmpresa
 		}}>
 			{children}
 		</MainContext.Provider>

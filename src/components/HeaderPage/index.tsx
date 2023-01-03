@@ -1,5 +1,11 @@
+import { useContext } from "react";
+import { AiOutlineDelete } from "react-icons/ai";
 import { BiArrowBack } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+import { MainContext } from "../../contexts";
+import { useQueries } from "../../hooks/useQueries";
+import { Button } from "../Button";
 import "./styles.scss";
 
 interface HeaderProps {
@@ -7,6 +13,8 @@ interface HeaderProps {
 }
 
 export function HeaderPage({ title }: HeaderProps) {
+	const { empresa, setEmpresa } = useContext(MainContext);
+	const { deleteCompany } = useQueries();
 	const navigate = useNavigate();
 
 	const handleBack = () => {
@@ -17,13 +25,32 @@ export function HeaderPage({ title }: HeaderProps) {
 		}
 	};
 
+	const handleDeleteCompany = async () => {
+		try {
+			if (!empresa) {
+				Swal.fire("Erro", "Nenhuma empresa encontrada!", "error");
+				return;
+			}
+
+			empresa.id && await deleteCompany({ empresaId: empresa.id });
+
+			navigate("/");
+			setEmpresa(null);
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
 	return (
 		<div className="header-area">
-			<div className="back-button" onClick={handleBack}>
+			<Button className="back-button" onClick={handleBack}>
 				<BiArrowBack color="#fff" size={16} />
-			</div>
+			</Button>
 			<div className="title-area">
 				<h2>{title}</h2>
+			</div>
+			<div className="trash-button" onClick={handleDeleteCompany}>
+				<AiOutlineDelete color="#fff" size={16} />
 			</div>
 		</div>
 	);
