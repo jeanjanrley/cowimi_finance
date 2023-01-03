@@ -62,7 +62,7 @@ export function AddCompanyPage() {
 
 	useEffect(() => {
 		try {
-			if (state && state.item) {
+			if (state && state.company) {
 				const { company } = state as { company: CompanyProps };
 				setCompany(company ?? null);
 				formRef.current?.setData({

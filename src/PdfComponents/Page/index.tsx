@@ -82,6 +82,11 @@ interface PDFPageProps {
 	fim: Date;
 }
 
+const replaceDate = (date: Date) => {
+	const stringDate = date.toLocaleDateString("pt-BR");
+	return stringDate;
+};
+
 // Create Document Component
 export const PDFPage = ({ items, fim, inicio }: PDFPageProps) => {
 	const totalEntradas = useRef(0);
@@ -120,10 +125,7 @@ export const PDFPage = ({ items, fim, inicio }: PDFPageProps) => {
 		}
 	})();
 
-	const replaceDate = (date: Date) => {
-		const stringDate = date.toLocaleDateString("pt-BR");
-		return stringDate;
-	};
+
 
 	return (
 		<Document>
@@ -152,13 +154,18 @@ export const PDFPage = ({ items, fim, inicio }: PDFPageProps) => {
 
 function ItemComponent({ item }: { item: TodoItemProps }) {
 
+	const date = item.createdAt?.toDate();
+
 	return (
 		<View key={item.id} style={styles.itemContainer} wrap={false}>
 			<View style={styles.headerTitleItem}>
 				<Text style={styles.titleItem}>{item.title} - {parserLocale(item.value)}</Text>
 				<Text style={styles.titleItem}>{item.status}</Text>
 			</View>
-			<Text style={styles.textItem}>{item.description}</Text>
+			<View style={styles.headerTitleItem}>
+				<Text style={styles.textItem}>{item.description}</Text>
+				<Text style={styles.textItem}>{date?.toLocaleDateString("pt-BR")}</Text>
+			</View>
 		</View>
 	);
 }
