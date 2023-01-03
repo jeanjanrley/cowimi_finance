@@ -116,11 +116,6 @@ export function useQueries() {
 	/**Cria novos itens */
 	const editItem = async ({ itemId, item }: { itemId: string, item: TodoItemProps }) => {
 		try {
-			if (!empresa) {
-				Swal.fire("Erro", "Nenhum empresa selecionada!", "error");
-				return;
-			}
-
 			const ref = doc(db, `items/${itemId}`);
 			await updateDoc(ref, item as any);
 			Swal.fire("Sucesso", "Item atualizado com sucesso!", "success");
