@@ -4,7 +4,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { useQueries } from "../../hooks/useQueries";
 import "./styles.scss";
 import * as Yup from "yup";
-import { TodoItemProps, TodoStatusTypes, TodoType, ValueTypes } from "../../types";
+import { CompanyProps, TodoItemProps, TodoStatusTypes, TodoType, ValueTypes } from "../../types";
 import { Input } from "../../components/Input";
 import { Timestamp } from "firebase/firestore";
 import { cleanObject } from "../../utils/cleanObject";
@@ -19,7 +19,7 @@ import { Button } from "../../components/Button";
 import { HeaderPage } from "../../components/HeaderPage";
 
 export function AddItemPage() {
-	const { user, optionsEmpresas, setEmpresa, empresa, empresas } = useContext(MainContext);
+	const { user, optionsEmpresas, setEmpresa, empresa, empresas, setItems } = useContext(MainContext);
 	const formRef = useRef<FormHandles>(null);
 	const [item, setItem] = useState<TodoItemProps | null>(null);
 	const [status, setStatus] = useState<TodoStatusTypes>("PENDENTE");
@@ -28,6 +28,12 @@ export function AddItemPage() {
 	const navigate = useNavigate();
 	const { state } = useLocation();
 	const selectRef = useRef<SelectInstance<ValueTypes, false, GroupBase<ValueTypes>> | null>(null);
+	const [defaultValue, setDefaultValue] = useState<ValueTypes<CompanyProps>>();
+
+	useEffect(() => {
+		const value = empresa ? { label: empresa?.nomeFantasia, value: empresa } : optionsEmpresas?.[0];
+		setDefaultValue(value);
+	}, [empresa, optionsEmpresas]);
 
 	useEffect(() => {
 		try {
@@ -112,6 +118,7 @@ export function AddItemPage() {
 				await createItem({ item: newItem });
 			}
 
+			setItems(prev => prev && prev?.filter(item => item.id !== newItem.id).concat(newItem));
 			comeBack();
 		} catch (error) {
 			if (error instanceof Yup.ValidationError) {
@@ -146,7 +153,7 @@ export function AddItemPage() {
 							options={optionsEmpresas ?? []}
 							onChange={event => setEmpresa(event?.value ?? null)}
 							styles={selectStyles}
-							defaultValue={optionsEmpresas?.[0]}
+							defaultValue={defaultValue}
 							isClearable
 						/>
 					</div>

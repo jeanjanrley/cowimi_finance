@@ -132,9 +132,6 @@ export function useQueries() {
 			const inicio = Timestamp.fromDate(new Date(`${inicioRef.toISOString().split("T")[0]}T00:00`));
 			const fim = Timestamp.fromDate(new Date(`${fimRef.toISOString().split("T")[0]}T20:59:59`));
 
-			console.log("Inicio: ", inicio.toDate().toISOString());
-			console.log("Fim: ", fim.toDate().toISOString());
-
 			const queryRef = query(ref,
 				where("vencimento", ">=", inicio),
 				where("vencimento", "<=", fim),

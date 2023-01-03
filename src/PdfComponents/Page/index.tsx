@@ -1,7 +1,8 @@
-import { useRef } from "react";
+import { useRef, useContext } from "react";
 import { Page, Text, View, Document, StyleSheet } from "@react-pdf/renderer";
-import { TodoItemProps } from "../../types";
+import { CompanyProps, TodoItemProps } from "../../types";
 import { parserLocale } from "../../utils/parses";
+import { MainContext } from "../../contexts";
 
 // Create styles
 const styles = StyleSheet.create({
@@ -11,6 +12,15 @@ const styles = StyleSheet.create({
 		border: "1px dashed #000",
 		padding: 16,
 	},
+	companyHeader: {
+		display: "flex",
+		flexDirection: "column",
+		width: "100%",
+		padding: 8,
+		marginBottom: 12,
+		borderRadius: 8,
+		border: "1px dashed #000",
+	},
 	headerArea: {
 		display: "flex",
 		flexDirection: "row",
@@ -18,6 +28,11 @@ const styles = StyleSheet.create({
 		width: "100%",
 		height: 90,
 		marginBottom: 12,
+	},
+	companyText: {
+		color: "#000",
+		fontSize: 12,
+		marginBottom: 4,
 	},
 	headerBox: {
 		display: "flex",
@@ -51,7 +66,7 @@ const styles = StyleSheet.create({
 		flexGrow: 1,
 		border: "1px dashed #000",
 		borderRadius: 8,
-		padding: 12
+		padding: 8
 	},
 	itemContainer: {
 		width: "100%",
@@ -74,12 +89,17 @@ const styles = StyleSheet.create({
 		color: "#000",
 		fontSize: 12,
 	},
+	litteText: {
+		color: "#000",
+		fontSize: 11,
+	},
 });
 
 interface PDFPageProps {
 	items: TodoItemProps[] | null;
 	inicio: Date;
 	fim: Date;
+	empresa?: CompanyProps;
 }
 
 const replaceDate = (date: Date) => {
@@ -88,9 +108,17 @@ const replaceDate = (date: Date) => {
 };
 
 // Create Document Component
-export const PDFPage = ({ items, fim, inicio }: PDFPageProps) => {
+export const PDFPage = ({ items, fim, inicio, empresa }: PDFPageProps) => {
 	const totalEntradas = useRef(0);
 	const totalSaidas = useRef(0);
+
+	const endereço = (() => {
+		if (empresa) {
+			const { rua, numero, cidade, bairro, uf } = empresa;
+			const endereco = `${rua}, ${numero}, ${bairro}, ${cidade} - ${uf}`;
+			return endereco;
+		}
+	})();
 
 	const handleCalcItems = () => {
 		try {
@@ -126,10 +154,17 @@ export const PDFPage = ({ items, fim, inicio }: PDFPageProps) => {
 	})();
 
 
-
 	return (
 		<Document>
 			<Page size="A4" style={styles.page}>
+				{empresa &&
+					<View style={styles.companyHeader}>
+						<Text style={styles.companyText}>Nome fantasia: {empresa.nomeFantasia}</Text>
+						<Text style={styles.companyText}>razão Social: {empresa.razaoSocial}</Text>
+						<Text style={styles.companyText}>CNPJ: {empresa.cnpj}</Text>
+						{endereço && <Text style={styles.textItem}>endereço: {endereço}</Text>}
+					</View>
+				}
 				<View style={styles.headerArea}>
 					<View style={{ ...styles.headerBox }}>
 						<Text style={styles.headerTitle}>Entradas</Text>
@@ -162,8 +197,8 @@ function ItemComponent({ item }: { item: TodoItemProps }) {
 				<Text style={styles.titleItem}>{item.status}</Text>
 			</View>
 			<View style={styles.headerTitleItem}>
-				<Text style={styles.textItem}>{item.description}</Text>
-				<Text style={styles.textItem}>{date?.toLocaleDateString("pt-BR")}</Text>
+				<Text style={styles.litteText}>{item.tipo} - {item.description}</Text>
+				<Text style={styles.litteText}>{date?.toLocaleDateString("pt-BR")}</Text>
 			</View>
 		</View>
 	);

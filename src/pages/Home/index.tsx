@@ -29,6 +29,12 @@ export function HomePage() {
 	const [fim, setFim] = useState(ultimoDia);
 	const totalEntradas = useRef(0);
 	const totalSaidas = useRef(0);
+	const [defaultValue, setDefaultValue] = useState<ValueTypes<CompanyProps>>();
+
+	useEffect(() => {
+		const value = empresa ? { label: empresa?.nomeFantasia, value: empresa } : optionsEmpresas?.[0];
+		setDefaultValue(value);
+	}, [empresa, optionsEmpresas]);
 
 	// Busca as empresas
 	useEffect(() => {
@@ -154,6 +160,7 @@ export function HomePage() {
 							items={items}
 							inicio={new Date(`${inicio}T00:00:00`)}
 							fim={new Date(`${fim}T23:59:59`)}
+							empresa={empresa ?? undefined}
 						/>}
 					>
 						<Button className="export-button litte-button">
@@ -186,7 +193,7 @@ export function HomePage() {
 							options={optionsEmpresas ?? []}
 							onChange={event => setEmpresa(event?.value ?? null)}
 							styles={selectStyles}
-							defaultValue={optionsEmpresas?.[0]}
+							defaultValue={defaultValue}
 							isClearable
 						/>
 					</div>
