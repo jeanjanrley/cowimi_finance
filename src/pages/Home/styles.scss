@@ -8,6 +8,44 @@
 		height: 100%;
 		gap: 12px;
 
+		.filters-area {
+			display: flex;
+			flex-direction: row;
+			align-items: flex-end;
+			gap: 8px;
+			width: 100%;
+
+			.select-area {
+				display: flex;
+				flex-direction: column;
+				flex-grow: 1;
+			}
+
+			.find-button,
+			.add-company-button,
+			.edit-company-button {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				cursor: pointer;
+				gap: 12px;
+				height: 38px;
+				width: 38px;
+				border: none;
+				background: #3AC977;
+				font-size: 16px;
+				margin-bottom: -3px;
+			}
+
+			.add-company-button {
+				background: #2b80b6;
+			}
+
+			.edit-company-button {
+				background: #8C4CAA;
+			}
+		}
+
 		.header-area {
 			display: flex;
 			gap: 8px;
@@ -56,46 +94,6 @@
 				}
 
 			}
-
-			.button-area {
-				display: flex;
-				flex-direction: row;
-				align-items: flex-end;
-				gap: 8px;
-				width: 100%;
-
-				.select-area {
-					display: flex;
-					flex-direction: column;
-					flex-grow: 1;
-				}
-
-				.find-button,
-				.add-company-button,
-				.edit-company-button {
-					display: flex;
-					align-items: center;
-					justify-content: center;
-					cursor: pointer;
-					gap: 12px;
-					height: 38px;
-					width: 38px;
-					border: none;
-					background: #3AC977;
-					font-size: 16px;
-					margin-bottom: -3px;
-				}
-
-				.add-company-button {
-					background: #2b80b6;
-				}
-
-				.edit-company-button {
-					background: #8C4CAA;
-				}
-			}
-
-
 		}
 
 		.items-area {

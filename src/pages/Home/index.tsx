@@ -171,6 +171,32 @@ export function HomePage() {
 	return (
 		<div className="page home-page">
 			<div className="container-area">
+				<div className="filters-area">
+					{
+						empresa &&
+						<button className="edit-company-button" onClick={handleEditCompany}>
+							<BiEdit color="#fff" size={16} />
+						</button>
+					}
+					<div className="select-area">
+						<label htmlFor="empresa">Empresa</label>
+						<Select
+							id="empresa"
+							placeholder="Selecione uma empresa"
+							options={optionsEmpresas ?? []}
+							onChange={event => setEmpresa(event?.value ?? null)}
+							styles={selectStyles}
+							defaultValue={optionsEmpresas?.[0]}
+							isClearable
+						/>
+					</div>
+					<button className="add-company-button" onClick={handleAddCompany}>
+						<AiOutlinePlus color="#fff" size={16} />
+					</button>
+					<button className="find-button" onClick={handleGetItems}>
+						<FaSearch color="#fff" size={16} />
+					</button>
+				</div>
 				<div className="header-area">
 					<div className="header-box">
 						<h3>Entradas</h3>
@@ -199,32 +225,6 @@ export function HomePage() {
 								onChange={event => setFim(event.target.value)}
 							/>
 						</div>
-					</div>
-					<div className="button-area">
-						{
-							empresa &&
-							<button className="edit-company-button" onClick={handleEditCompany}>
-								<BiEdit color="#fff" size={16} />
-							</button>
-						}
-						<div className="select-area">
-							<label htmlFor="empresa">Empresa</label>
-							<Select
-								id="empresa"
-								placeholder="Selecione uma empresa"
-								options={optionsEmpresas ?? []}
-								onChange={event => setEmpresa(event?.value ?? null)}
-								styles={selectStyles}
-								defaultValue={optionsEmpresas?.[0]}
-								isClearable
-							/>
-						</div>
-						<button className="add-company-button" onClick={handleAddCompany}>
-							<AiOutlinePlus color="#fff" size={16} />
-						</button>
-						<button className="find-button" onClick={handleGetItems}>
-							<FaSearch color="#fff" size={16} />
-						</button>
 					</div>
 				</div>
 				<div className="items-area">

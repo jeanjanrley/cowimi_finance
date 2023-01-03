@@ -4,7 +4,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { useQueries } from "../../hooks/useQueries";
 import "./styles.scss";
 import * as Yup from "yup";
-import { TodoItemProps, TodoStatusTypes, TodoType } from "../../types";
+import { TodoItemProps, TodoStatusTypes, TodoType, ValueTypes } from "../../types";
 import { Input } from "../../components/Input";
 import { Timestamp } from "firebase/firestore";
 import { cleanObject } from "../../utils/cleanObject";
@@ -12,11 +12,12 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { confirmMiddleware } from "../../utils/middlewares";
 import { MainContext } from "../../contexts";
 import Swal from "sweetalert2";
-import Select from "react-select";
 import { selectStyles } from "../../utils/selectStyles";
+import { Select } from "../../components/Select";
+import { SelectInstance, GroupBase } from "react-select";
 
 export function AddItemPage() {
-	const { user, optionsEmpresas, setEmpresa, empresa } = useContext(MainContext);
+	const { user, optionsEmpresas, setEmpresa, empresa, empresas } = useContext(MainContext);
 	const formRef = useRef<FormHandles>(null);
 	const [item, setItem] = useState<TodoItemProps | null>(null);
 	const [status, setStatus] = useState<TodoStatusTypes>("PENDENTE");
@@ -24,6 +25,7 @@ export function AddItemPage() {
 	const { createItem, editItem } = useQueries();
 	const navigate = useNavigate();
 	const { state } = useLocation();
+	const selectRef = useRef<SelectInstance<ValueTypes, false, GroupBase<ValueTypes>> | null>(null);
 
 	useEffect(() => {
 		try {
@@ -36,7 +38,8 @@ export function AddItemPage() {
 
 				formRef.current?.setData({
 					...item,
-					vencimento: vencimento
+					vencimento: vencimento,
+					empresa: empresas?.find(empresa => empresa?.id === item?.empresa)?.nomeFantasia ?? "",
 				});
 
 				setStatus(item.status);
@@ -45,7 +48,7 @@ export function AddItemPage() {
 		} catch (error) {
 			console.log(error);
 		}
-	}, [state]);
+	}, [empresas, state]);
 
 	const comeBack = () => {
 		try {
@@ -136,6 +139,8 @@ export function AddItemPage() {
 					<div className="select-area">
 						<label htmlFor="empresa">Empresa</label>
 						<Select
+							name="empresa"
+							selectRef={selectRef}
 							id="empresa"
 							placeholder="Selecione uma empresa"
 							options={optionsEmpresas ?? []}
