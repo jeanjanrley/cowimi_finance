@@ -188,7 +188,7 @@ export const PDFPage = ({ items, fim, inicio, empresa }: PDFPageProps) => {
 };
 
 function ItemComponent({ item }: { item: TodoItemProps }) {
-	const date = item.createdAt?.toDate();
+	const date = item.vencimento?.toDate();
 
 	return (
 		<View key={item.id} style={styles.itemContainer} wrap={false}>

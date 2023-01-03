@@ -11,7 +11,7 @@ import { MdPictureAsPdf } from "react-icons/md";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import { PDFPage } from "../../PdfComponents/Page";
 import Select, { } from "react-select";
-import { CompanyProps, ValueTypes } from "../../types";
+import { CompanyProps, TodoItemProps, ValueTypes } from "../../types";
 import { selectStyles } from "../../utils/selectStyles";
 import { Button } from "../../components/Button";
 import { AiOutlinePlus } from "react-icons/ai";
@@ -30,6 +30,18 @@ export function HomePage() {
 	const totalEntradas = useRef(0);
 	const totalSaidas = useRef(0);
 	const [defaultValue, setDefaultValue] = useState<ValueTypes<CompanyProps>>();
+	const [reorderedItems, setReorderedItems] = useState<TodoItemProps[] | null>();
+
+	useEffect(() => {
+		try {
+			if (items) {
+				const reorder = items.sort((a, b) => a?.vencimento.seconds > b?.vencimento.seconds ? + 1 : -1);
+				setReorderedItems([...reorder]);
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	}, [items]);
 
 	useEffect(() => {
 		const value = empresa ? { label: empresa?.nomeFantasia, value: empresa } : optionsEmpresas?.[0];
@@ -152,12 +164,12 @@ export function HomePage() {
 
 	const PDFBUTTON = (() => {
 		try {
-			if (items && inicio && fim) {
+			if (reorderedItems && inicio && fim) {
 				return (
 					<PDFDownloadLink
 						fileName="Realatório"
 						document={<PDFPage
-							items={items}
+							items={reorderedItems}
 							inicio={new Date(`${inicio}T00:00:00`)}
 							fim={new Date(`${fim}T23:59:59`)}
 							empresa={empresa ?? undefined}
@@ -235,7 +247,7 @@ export function HomePage() {
 					</div>
 				</div>
 				<div className="items-area">
-					{items?.map(item => <TodoItem key={item.id} item={item} />)}
+					{reorderedItems?.map(item => <TodoItem key={item.id} item={item} />)}
 				</div>
 				<div className="buttons-area">
 					<>
