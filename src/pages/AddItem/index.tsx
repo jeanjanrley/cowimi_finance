@@ -12,10 +12,11 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { confirmMiddleware } from "../../utils/middlewares";
 import { MainContext } from "../../contexts";
 import Swal from "sweetalert2";
-
+import Select from "react-select";
+import { selectStyles } from "../../utils/selectStyles";
 
 export function AddItemPage() {
-	const { user } = useContext(MainContext);
+	const { user, optionsEmpresas, setEmpresa, empresa } = useContext(MainContext);
 	const formRef = useRef<FormHandles>(null);
 	const [item, setItem] = useState<TodoItemProps | null>(null);
 	const [status, setStatus] = useState<TodoStatusTypes>("PENDENTE");
@@ -82,6 +83,7 @@ export function AddItemPage() {
 				vencimento: Timestamp.fromDate(new Date(`${data.vencimento}T00:00:00`)),
 				status: status,
 				tipo: tipo,
+				empresa: empresa?.id
 			});
 
 			// Verifica se edita ou salva o item
@@ -131,6 +133,18 @@ export function AddItemPage() {
 					ref={formRef}
 					className="form-area"
 				>
+					<div className="select-area">
+						<label htmlFor="empresa">Empresa</label>
+						<Select
+							id="empresa"
+							placeholder="Selecione uma empresa"
+							options={optionsEmpresas ?? []}
+							onChange={event => setEmpresa(event?.value ?? null)}
+							styles={selectStyles}
+							defaultValue={optionsEmpresas?.[0]}
+							isClearable
+						/>
+					</div>
 					<Input
 						name="title"
 						label="Titulo"
