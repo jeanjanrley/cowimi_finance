@@ -197,16 +197,6 @@ export function HomePage() {
 						<FaSearch color="#fff" size={16} />
 					</button>
 				</div>
-				<div className="header-area">
-					<div className="header-box">
-						<h3>Entradas</h3>
-						<h2>{parserLocale(totalEntradas.current)}</h2>
-					</div>
-					<div className="header-box second-box">
-						<h3>Saídas</h3>
-						<h2>{parserLocale(totalSaidas.current)}</h2>
-					</div>
-				</div>
 				<div className="periodo-area">
 					<div className="dates-area">
 						<div className="periodo-box">
@@ -225,6 +215,16 @@ export function HomePage() {
 								onChange={event => setFim(event.target.value)}
 							/>
 						</div>
+					</div>
+				</div>
+				<div className="header-area">
+					<div className="header-box">
+						<h3>Entradas</h3>
+						<h2>{parserLocale(totalEntradas.current)}</h2>
+					</div>
+					<div className="header-box second-box">
+						<h3>Saídas</h3>
+						<h2>{parserLocale(totalSaidas.current)}</h2>
 					</div>
 				</div>
 				<div className="items-area">
