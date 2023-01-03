@@ -1,0 +1,41 @@
+.header-area {
+	display: flex;
+	gap: 8px;
+	height: 40px;
+	min-height: 40px;
+	width: 100%;
+
+	.back-button {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: 4px;
+		background: #E54E43;
+		height: 100%;
+		width: 40px;
+		cursor: pointer;
+		transition: all ease-in-out 0.2s;
+
+		&:hover {
+			outline: 1px solid #fff;
+		}
+	}
+
+	.title-area {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		height: 100%;
+		border-radius: 4px;
+		background: #8C4CAA;
+		flex-grow: 1;
+
+		h2 {
+			font-size: 16px;
+			color: #fff;
+			margin-left: - calc(40px - 8px);
+		}
+	}
+
+
+}

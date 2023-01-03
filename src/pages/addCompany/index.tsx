@@ -14,6 +14,8 @@ import { MainContext } from "../../contexts";
 import axios from "axios";
 import { timeStamp } from "console";
 import { Button } from "../../components/Button";
+import { BiArrowBack } from "react-icons/bi";
+import { HeaderPage } from "../../components/HeaderPage";
 
 export function AddCompanyPage() {
 	const { user, setEmpresas } = useContext(MainContext);
@@ -154,9 +156,7 @@ export function AddCompanyPage() {
 	return (
 		<div className="add-item-page page">
 			<div className="container-area">
-				<div className="header-area">
-					<h2>{company ? "Editar Empresa" : "Adicionar Empresa"}</h2>
-				</div>
+				<HeaderPage title={company ? "Editar Empresa" : "Adicionar Empresa"} />
 				<Form
 					onSubmit={handleSubmit}
 					ref={formRef}

@@ -16,6 +16,7 @@ import { selectStyles } from "../../utils/selectStyles";
 import { Select } from "../../components/Select";
 import { SelectInstance, GroupBase } from "react-select";
 import { Button } from "../../components/Button";
+import { HeaderPage } from "../../components/HeaderPage";
 
 export function AddItemPage() {
 	const { user, optionsEmpresas, setEmpresa, empresa, empresas } = useContext(MainContext);
@@ -129,9 +130,7 @@ export function AddItemPage() {
 	return (
 		<div className="add-item-page page">
 			<div className="container-area">
-				<div className="header-area">
-					<h2>{item ? "Editar Item" : "Adicionar Item"}</h2>
-				</div>
+				<HeaderPage title={item ? "Editar Item" : "Adicionar Item"} />
 				<Form
 					onSubmit={handleSubmit}
 					ref={formRef}
