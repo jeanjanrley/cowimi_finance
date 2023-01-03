@@ -22,14 +22,13 @@ const primeiroDia = new Date(date.getFullYear(), date.getMonth(), 1).toISOString
 const ultimoDia = new Date(date.getFullYear(), date.getMonth() + 1, 0).toISOString().split("T")[0];
 
 export function HomePage() {
-	const { items, setItems, user, empresa, setEmpresa, empresas, setEmpresas } = useContext(MainContext);
+	const { items, setItems, user, empresa, setEmpresa, empresas, setEmpresas, optionsEmpresas, setOptionsEmpresas } = useContext(MainContext);
 	const { getItems, fazerLogOff, getCompanys } = useQueries();
 	const navigate = useNavigate();
 	const [inicio, setInicio] = useState(primeiroDia);
 	const [fim, setFim] = useState(ultimoDia);
 	const totalEntradas = useRef(0);
 	const totalSaidas = useRef(0);
-	const [optionsEmpresas, setOptionsEmpresas] = useState<ValueTypes<CompanyProps>[] | null>(null);
 
 	// Busca as empresas
 	useEffect(() => {
@@ -50,11 +49,11 @@ export function HomePage() {
 		});
 
 		setOptionsEmpresas(options ?? null);
-	}, [empresas]);
+	}, [empresas, setOptionsEmpresas]);
 
 	// Busca os itens
 	useEffect(() => {
-		getItems({ inicio: new Date(primeiroDia), fim: new Date(ultimoDia) })
+		getItems({ inicio: new Date(primeiroDia), fim: new Date(ultimoDia), empresa: empresa ?? undefined })
 			.then(response => {
 				setItems(response ?? null);
 			})
@@ -62,11 +61,11 @@ export function HomePage() {
 				console.log(error);
 				setItems(null);
 			});
-	}, [getItems, setItems]);
+	}, [empresa, getItems, setItems]);
 
 	const handleGetItems = async () => {
 		if (inicio && fim) {
-			getItems({ inicio: new Date(inicio), fim: new Date(fim) })
+			getItems({ inicio: new Date(inicio), fim: new Date(fim), empresa: empresa ?? undefined })
 				.then(response => {
 					setItems(response ?? null);
 				})
@@ -217,6 +216,7 @@ export function HomePage() {
 								onChange={event => setEmpresa(event?.value ?? null)}
 								styles={selectStyles}
 								defaultValue={optionsEmpresas?.[0]}
+								isClearable
 							/>
 						</div>
 						<button className="add-company-button" onClick={handleAddCompany}>

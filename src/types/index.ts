@@ -21,6 +21,7 @@ export interface TodoItemProps {
 	createdAt?: Timestamp;
 	updatedAt?: Timestamp;
 	updatedBy?: string;
+	empresa: string;
 }
 
 interface EnderecoProps {

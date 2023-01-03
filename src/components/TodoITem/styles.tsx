@@ -9,6 +9,7 @@ export const TodoItemStyles = styled.div<{ status: TodoStatusTypes }>`
 	padding: 8px;
 	width: 100%;
 	border-left: ${({ status }) => status === "PAGO" || status === "RECEBIDO" ? "5px solid #31AA63" : "5px solid #F59A2F"};
+	min-height: max-content;
 
 	.todo-header-area {
 		display: flex;

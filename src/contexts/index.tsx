@@ -1,6 +1,6 @@
 import { User } from "firebase/auth";
 import { createContext, Dispatch, SetStateAction, useState } from "react";
-import { CompanyProps, TodoItemProps } from "../types";
+import { CompanyProps, TodoItemProps, ValueTypes } from "../types";
 import { useEffect } from "react";
 
 interface MainContextProps {
@@ -12,6 +12,8 @@ interface MainContextProps {
 	setEmpresa: Dispatch<SetStateAction<CompanyProps | null>>
 	empresas: CompanyProps[] | null;
 	setEmpresas: Dispatch<SetStateAction<CompanyProps[] | null>>
+	optionsEmpresas: ValueTypes<CompanyProps>[] | null;
+	setOptionsEmpresas: Dispatch<SetStateAction<ValueTypes<CompanyProps>[] | null>>;
 }
 
 export const MainContext = createContext<MainContextProps>({} as MainContextProps);
@@ -21,6 +23,8 @@ export function MainContextProvider({ children }: { children: React.ReactNode; }
 	const [user, setUser] = useState<User | null>(null);
 	const [empresa, setEmpresa] = useState<CompanyProps | null>(null);
 	const [empresas, setEmpresas] = useState<CompanyProps[] | null>(null);
+	const [optionsEmpresas, setOptionsEmpresas] = useState<ValueTypes<CompanyProps>[] | null>(null);
+
 
 	useEffect(() => {
 		try {
@@ -33,7 +37,11 @@ export function MainContextProvider({ children }: { children: React.ReactNode; }
 	}, [user]);
 
 	return (
-		<MainContext.Provider value={{ items, setItems, user, setUser, empresa, setEmpresa, empresas, setEmpresas }}>
+		<MainContext.Provider value={{
+			items, setItems, user, setUser,
+			empresa, setEmpresa, empresas,
+			setEmpresas, optionsEmpresas, setOptionsEmpresas
+		}}>
 			{children}
 		</MainContext.Provider>
 	);

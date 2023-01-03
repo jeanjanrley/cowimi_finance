@@ -131,7 +131,7 @@ export function useQueries() {
 	};
 
 	/**Otem uma lista de items */
-	const getItems = useCallback(async ({ inicio: inicioRef, fim: fimRef }: { inicio: Date; fim: Date }) => {
+	const getItems = useCallback(async ({ inicio: inicioRef, fim: fimRef, empresa }: { inicio: Date; fim: Date, empresa?: CompanyProps }) => {
 		try {
 			const ref = collection(db, "items");
 			const inicio = Timestamp.fromDate(new Date(`${inicioRef.toISOString().split("T")[0]}T00:00`));
@@ -144,6 +144,7 @@ export function useQueries() {
 				where("vencimento", ">=", inicio),
 				where("vencimento", "<=", fim),
 				where("owner", "==", user?.uid),
+				empresa?.id ? where("empresa", "==", empresa?.id) : where("owner", "==", user?.uid),
 			);
 
 			const snapshot = await getDocs(queryRef);

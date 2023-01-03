@@ -153,7 +153,6 @@ export const PDFPage = ({ items, fim, inicio }: PDFPageProps) => {
 };
 
 function ItemComponent({ item }: { item: TodoItemProps }) {
-
 	const date = item.createdAt?.toDate();
 
 	return (
