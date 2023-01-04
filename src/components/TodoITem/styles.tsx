@@ -5,16 +5,15 @@ export const TodoItemStyles = styled.div<{ status: TodoStatusTypes }>`
 	display: flex;
 	background: #474747;
 	border-radius: 4px;
-	overflow: hidden;
 	padding: 8px;
 	width: 100%;
 	border-left: ${({ status }) => status === "PAGO" || status === "RECEBIDO" ? "5px solid #31AA63" : "5px solid #F59A2F"};
 	min-height: max-content;
+	align-items: center;
 
 	.todo-header-area {
 		display: flex;
 		flex-direction: column;
-		gap: 0;
 		width: 100%;
 
 
@@ -37,6 +36,7 @@ export const TodoItemStyles = styled.div<{ status: TodoStatusTypes }>`
 			display: flex;
 			justify-content: space-between;
 			width: 100%;
+			gap: 12px;
 
 			.icons-area {
 				display: flex;
