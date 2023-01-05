@@ -25,12 +25,12 @@ A página foi criada no conceito Mobile First (Com foco primeiramente no mobile)
 
 <div>
 	<h1>Screenshots</h1>
-	<div>
-		<img style="width: 49%" src="./public/loginPage.jpg">
-		<img style="width: 49%" src="./public/homePage.jpg">
+	<div style="display: flex; justify-content: space-between; gap: 16px; margin-bottom: 32px">
+		<img style="width: 50%" src="./public/loginPage.jpg">
+		<img style="width: 50%" src="./public/homePage.jpg">
 	</div>
-	<div>
-		<img style="width: 49%" src="./public/addItem.jpg">
-		<img style="width: 49%" src="./public/confirmButton.jpg">
+	<div style="display: flex; justify-content: space-between; gap: 16px; margin-bottom: 32px">
+		<img style="width: 50%" src="./public/addItem.jpg">
+		<img style="width: 50%" src="./public/confirmButton.jpg">
 	</div>
 <div>
