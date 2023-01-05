@@ -34,12 +34,12 @@ export function HeaderPage({ title }: HeaderProps) {
 
 			if (empresa.id) {
 				const result = await deleteCompany({ empresaId: empresa.id });
+
 				if (result === "DELETED") {
 					navigate("/");
 					setEmpresa(null);
 				}
 			}
-
 		} catch (error) {
 			console.log(error);
 		}
