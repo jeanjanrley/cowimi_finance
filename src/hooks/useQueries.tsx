@@ -224,10 +224,12 @@ export function useQueries() {
 			const referencia = doc(db, `empresas/${empresaId}`);
 			await deleteDoc(referencia);
 			Swal.fire("Sucesso!", "Empresa deletada com sucesso!", "success");
+			return "DELETED";
 		}
 		catch (error) {
 			console.log(error);
 			Swal.fire("Erro", "Houve um erro ao realizar esta ação!", "error");
+			return "ERROR";
 		}
 	};
 	return {
