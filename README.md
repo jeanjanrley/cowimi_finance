@@ -8,12 +8,14 @@
 </p>
 
 <p>
-♦️ Inicialmente usei SASS e para desenvolver a aplicação, mas tive problemas quando precisei usar o 'React PDF redenderer' então resolvi mudar para o CRA (Create React APP)
+♦️ Inicialmente usei VITE e para desenvolver a aplicação em React, mas tive problemas quando precisei usar o 'React PDF redenderer' então resolvi mudar para o CRA (Create React APP)
 </p>
 
 <p>
 A página foi criada no conceito Mobile First (Com foco primeiramente no mobile), mas é responsiva para Desktop e tablet também.
 </p>
+
+	Caso tenha interesse em testar o projeto em sua maquina local, baixe o repositorio, depois use "npm install" ou "yarn" para baixar e instalar as dependencias;
 
 ##
 
